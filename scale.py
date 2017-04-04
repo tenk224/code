@@ -80,6 +80,9 @@ def cal_rec_res(step, res_min, res_max, *list):
 result_cpu=cal_rec_res(1, cpu_min, cpu_max, *res_cpu)
 result_ram=cal_rec_res(10, ram_min, ram_max, *res_ram)
 
+print result_cpu
+print result_ram
+
 #write recommended resource
 f = open(rec_path, 'w')
 f.write("%i %i" % (result_cpu[0],result_ram[0]))
