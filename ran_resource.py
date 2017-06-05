@@ -4,11 +4,11 @@ import sys
 import random
 
 path=sys.argv[1]
-start=int(sys.argv[2])
-end=int(sys.argv[3])
-res=[0]*15
+start=1
+end=100
+res=[0]*135
 
 f = open(path, 'w')
-for i in range(0,15):
-	f.write("%i  " % (random.randint(start,end)))
+for i in range(0,135):
+	f.write("%i\n" % (random.randint(start,end)))
 f.close()

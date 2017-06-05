@@ -3,8 +3,8 @@
 import sys
 import csv
 
-cpu_path_after=sys.argv[1]+"cpu_after.csv"
-ram_path_after=sys.argv[1]+"ram_after.csv"
+cpu_path_after=sys.argv[1]+"cpu_after"
+ram_path_after=sys.argv[1]+"ram_after"
 cpu_path=sys.argv[1]+"cpu.csv"
 ram_path=sys.argv[1]+"ram.csv"
 rec_path=sys.argv[1]+"rec"
@@ -51,13 +51,13 @@ ram_min=get_min(*res_ram)
 def cal_rec_res(step, res_min, res_max, *list):
 	result=[0.0]*3
 	i=res_min
-	sum_=0.0
+	sub_=1.0
 	while i<=res_max:
 		total_res=0.0
 		total_time=0.0
 		p_res=0.0
 		p_time=0.0
-		p_sum=0.0
+		p_sub=0.0
 		for j in range(0,len(list)):
 			if(i>list[j]):
 				total_res=total_res+list[j]
@@ -67,10 +67,10 @@ def cal_rec_res(step, res_min, res_max, *list):
 
 		p_res=total_res/(len(list)*i)
 		p_time=total_time/len(list)
-		p_sum=p_res+p_time
+		p_sub=abs(p_res-p_time)
 
-		if (p_sum>sum_ and p_res>p_time):
-			sum_=p_sum
+		if (p_sub<sub_):
+			sub_=p_sub
 			result[0]=i
 			result[1]=p_res
 			result[2]=p_time
@@ -79,65 +79,64 @@ def cal_rec_res(step, res_min, res_max, *list):
 
 	return result
 
-# def gen_per(step, res_min, res_max, *list):
-# 	result=[]
-# 	i=res_min
-# 	sum_=0.0
-# 	while i<=res_max:
-# 		result_i=[0.0]*2
-# 		total_res=0.0
-# 		total_time=0.0
-# 		p_res=0.0
-# 		p_time=0.0
-# 		p_sum=0.0
+def gen_per(step, res_min, res_max, *list):
+	result=[]
+	i=res_min
+	sum_=0.0
+	while i<=res_max:
+		result_i=[0.0]*2
+		total_res=0.0
+		total_time=0.0
+		p_res=0.0
+		p_time=0.0
+		p_sum=0.0
 
-# 		for j in range(0,len(list)):
-# 			if(i>list[j]):
-# 				total_res=total_res+list[j]
-# 				total_time=total_time+1
-# 			else:
-# 				total_res=total_res+i
+		for j in range(0,len(list)):
+			if(i>list[j]):
+				total_res=total_res+list[j]
+				total_time=total_time+1
+			else:
+				total_res=total_res+i
 
-# 		result_i[0]=float(i)/float(res_max)
-# 		result_i[1]=total_time/len(list)
-# 		result.append(result_i)
-# 		i=i+step
+		result_i[0]=float(i)/float(res_max)
+		result_i[1]=total_time/len(list)
+		result.append(result_i)
+		i=i+step
 
-# 	return result
+	return result
 
 result_cpu=cal_rec_res(1, cpu_min+1, cpu_max, *res_cpu)
 result_ram=cal_rec_res(10, ram_min+1, ram_max, *res_ram)
+# res_cpu_after=[0]*len(res_cpu)
+# res_ram_after=[0]*len(res_ram)
 
-res_cpu_after=[0]*len(res_cpu)
-res_ram_after=[0]*len(res_ram)
+# for i in range(0,len(res_cpu_after)):
+# 	if(res_cpu[i]<=result_cpu[0]):
+# 		res_cpu_after[i]=res_cpu[i]
+# 	else:
+# 		res_cpu_after[i]=result_cpu[0]
 
-for i in range(0,len(res_cpu_after)):
-	if(res_cpu[i]<=result_cpu[0]):
-		res_cpu_after[i]=res_cpu[i]
-	else:
-		res_cpu_after[i]=result_cpu[0]
+# f = open(cpu_path_after, 'w')
+# for i in range(0,len(res_cpu_after)):
+# 	f.write("%i  " % (res_cpu_after[i]))
+# f.close()
 
-f = open(cpu_path_after, 'w')
-for i in range(0,len(res_cpu_after)):
-	f.write("%i\n" % (res_cpu_after[i]))
-f.close()
+# for i in range(0,len(res_ram_after)):
+# 	if(res_ram[i]<=result_ram[0]):
+# 		res_ram_after[i]=res_ram[i]
+# 	else:
+# 		res_ram_after[i]=result_ram[0]
 
-for i in range(0,len(res_ram_after)):
-	if(res_ram[i]<=result_ram[0]):
-		res_ram_after[i]=res_ram[i]
-	else:
-		res_ram_after[i]=result_ram[0]
-
-f = open(ram_path_after, 'w')
-for i in range(0,len(res_ram_after)):
-	f.write("%i\n" % (res_ram_after[i]))
-f.close()
+# f = open(ram_path_after, 'w')
+# for i in range(0,len(res_ram_after)):
+# 	f.write("%i  " % (res_ram_after[i]))
+# f.close()
 
 
-print result_cpu
-print result_ram
+# print result_cpu
+# print result_ram
 
-#least squares method section
+# #least squares method section
 
 # #cpu
 # per_cpu=gen_per(1, cpu_min+1, result_cpu[0], *res_cpu_after)
@@ -170,6 +169,7 @@ print result_ram
 
 #write recommended resource
 
+print result_cpu
 
 f = open(rec_path, 'w')
 f.write("%i %i" % (result_cpu[0],result_ram[0]))

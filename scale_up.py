@@ -3,8 +3,9 @@
 import sys
 import csv
 
-cpu_path=sys.argv[1]+"cpu.csv"
-ram_path=sys.argv[1]+"ram.csv"
+cpu_path=sys.argv[1]+"cpu_after.csv"
+ram_path=sys.argv[1]+"ram_after.csv"
+perc_path=sys.argv[1]+"perc.csv"
 
 #read cpu resource
 res_cpu=[]
@@ -62,7 +63,7 @@ def gen_per(step, res_min, res_max, *list):
 			else:
 				total_res=total_res+i
 
-		result_i[0]=float(i)/float(res_max)
+		result_i[0]=i #/float(res_max)
 		result_i[1]=total_time/len(list)
 		result.append(result_i)
 		i=i+step
@@ -99,6 +100,17 @@ def cal_linear(*list):
 
 	return result
 
+with open(perc_path, "wb") as f:
+	writer = csv.writer(f)
+	writer.writerows(per_cpu)
 
 print cal_linear(*per_cpu)
 print cal_linear(*per_ram)
+
+pr_rs = cal_linear(*per_cpu)
+alpha=0.0
+print (0.70+alpha-pr_rs[1])/pr_rs[0]
+print (0.75+alpha-pr_rs[1])/pr_rs[0]
+print (0.80+alpha-pr_rs[1])/pr_rs[0]
+print (0.85+alpha-pr_rs[1])/pr_rs[0]
+print (0.9+alpha-pr_rs[1])/pr_rs[0]

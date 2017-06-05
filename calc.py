@@ -81,6 +81,4 @@ def cal_res(step, res_min, res_max, *list):
 result_cpu=cal_res(1, cpu_min+1, cpu_max, *res_cpu)
 result_ram=cal_res(10, ram_min+1, ram_max, *res_ram)
 
-print len(res_cpu)
 print result_cpu
-print result_ram
