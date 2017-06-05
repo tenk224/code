@@ -2,6 +2,8 @@
 
 SECONDS=0
 
+export PATH=$PATH:/usr/lib/openmpi/bin
+
 rm -f cpu.csv
 rm -f ram.csv
 
